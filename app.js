@@ -149,8 +149,7 @@ function uploadFile(blob, fileName) {
     reader.readAsDataURL(blob);
     reader.onloadend = function () {
       const base64 = reader.result.split(',')[1];
-      const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxm4IcqYEHKGLzwBPgYx0BXph71Y4E5yc2KMSsncdvsW_9Tj2lshici4gC_ItXlJxg/exec";
-      
+      const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyvPYT5UyY-MsUKdajiaoOTCi4AK7We98kbyFtl91XKHdiydz2rNbDQJej0ow3qcldf/exec";
       fetch(WEB_APP_URL, {
         method: "POST",
         body: JSON.stringify({ file: base64, filename: fileName })
