@@ -251,7 +251,7 @@ body{
 .pwa-after-note{
   margin-top:12px;
   text-align:center;
-  font-size:12px;
+  font-size:14px;
   line-height:1.5;
   color:#7b2960;
 }
