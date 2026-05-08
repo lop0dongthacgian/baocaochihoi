@@ -193,7 +193,7 @@ document.addEventListener('DOMContentLoaded', function onDOMReady() {
           <span style="font-size:22px">📥</span> Cài đặt ứng dụng
         </button>
         <div class="pwa-after-note">
-          ✅ Sau khi cài xong, thoát khỏi màn hình này, tìm và mở app đã cài để sử dụng<br>(không cần vào link này nữa).<br>
+          ✅ Sau khi cài xong, thoát khỏi màn hình này, tìm và mở app đã cài để sử dụng (không cần vào link này nữa).<br>
           🗑️ Để gỡ cài đặt: Kích chuột phải hoặc nhấn giữ vào icon → <b>Gỡ cài đặt</b> (PC, Android) hoặc giữ icon → <b>Xoá</b> (Iphone)
         </div>
       </div>
