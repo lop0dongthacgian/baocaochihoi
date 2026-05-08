@@ -226,9 +226,6 @@ document.addEventListener('DOMContentLoaded', function onDOMReady() {
           <div class="pwa-step-text">Bật <b>Mở dưới dạng ứng dụng web</b>.</div>
         </div>
         
-        <div style="text-align:center; margin: 14px 0 4px;">
-          <img src="ip.png" alt="Hướng dẫn cài đặt iOS" style="max-width:100%; border-radius:16px; box-shadow:0 4px 16px rgba(0,0,0,.15);">
-        </div>
         <div class="pwa-after-note">
           ✅ Sau khi cài xong, mở app từ màn hình chính — không cần vào link này nữa.<br>
           🗑️ Gỡ cài đặt: giữ icon app → <b>Xoá bookmark</b>
