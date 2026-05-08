@@ -335,7 +335,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       <div class="pwa-after-note">
         ✅ Sau khi cài xong, mở app ngoài màn hình chính để sử dụng.<br>
-        🗑️ Gỡ app: nhấn giữ icon → <b>Gỡ cài đặt</b>
+        🗑️ Để gỡ app: nhấn giữ icon → <b>Gỡ cài đặt</b>
       </div>
 
     </div>
