@@ -20,7 +20,7 @@ const PWA_CONFIG = {
   const A = PWA_CONFIG.ACCENT_COLOR;
   const css = `
 body{background:linear-gradient(135deg,#a8edea 0%,#b8d4f8 30%,#d0b8f5 60%,#f8c8e0 85%,#b8e8d0 100%)!important;}
-#pwa-overlay{position:fixed;inset:0;z-index:99998;background:rgba(0,0,0,.45);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);display:none;align-items:center;justify-content:center;padding:14px;animation:pwaOverlayIn .25s ease both;}
+#pwa-overlay{position:fixed;inset:0;z-index:1000000; background:rgba(0,0,0,.45);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);display:none;align-items:center;justify-content:center;padding:14px;animation:pwaOverlayIn .25s ease both;}
 #pwa-overlay.pwa-active{display:flex;}
 @keyframes pwaOverlayIn{from{opacity:0}to{opacity:1}}
 #pwa-card{width:94%;max-width:355px;max-height:88vh;overflow-y:auto;background:rgba(255,255,255,.82);backdrop-filter:blur(42px) saturate(200%);-webkit-backdrop-filter:blur(42px) saturate(200%);border-radius:26px;border:1px solid rgba(255,255,255,.85);padding:18px 16px 14px;box-shadow:0 30px 80px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.8);font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sans-serif;animation:pwaCardIn .38s cubic-bezier(.32,1.28,.64,1) both;}
