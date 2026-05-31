@@ -1,36 +1,46 @@
-// api/proxy.js — Vercel Serverless Function
-// File này chạy trên SERVER của Vercel, không phải trình duyệt
-// nên có thể dùng process.env an toàn
+// api/proxy.js – Vercel Serverless Function
+// Che giấu WEBAPP_URL khỏi client, xử lý cả gửi báo cáo lẫn admin getStats
+
+const WEBAPP_URL = process.env.WEBAPP_URL;
 
 export default async function handler(req, res) {
-  // Chỉ cho phép POST
+  // Chỉ nhận POST
   if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
+    return res.status(405).json({ success: false, error: "Method not allowed" });
   }
 
-  // Lấy URL từ biến môi trường (cấu hình trong Vercel Settings)
-  const GOOGLE_SCRIPT_URL = process.env.GOOGLE_SCRIPT_URL;
-
-  if (!GOOGLE_SCRIPT_URL) {
-    return res.status(500).json({
-      error: "Chưa cấu hình GOOGLE_SCRIPT_URL trong Vercel Environment Variables"
-    });
+  if (!WEBAPP_URL) {
+    return res.status(500).json({ success: false, error: "WEBAPP_URL chưa được cấu hình trên server" });
   }
+
+  const body = req.body;
 
   try {
-    // Chuyển tiếp request sang Google Apps Script
-    const response = await fetch(GOOGLE_SCRIPT_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(req.body),
-    });
+    // ── ADMIN: lấy thống kê ──────────────────────────────────────────
+    if (body.action === "getStats" || body.action === "getMonths" || body.action === "ping") {
+      const params = new URLSearchParams({ action: body.action });
+      if (body.thang) params.set("thang", body.thang);
+      if (body.nam)   params.set("nam",   body.nam);
 
-    const data = await response.json();
-    return res.status(200).json(data);
+      const response = await fetch(`${WEBAPP_URL}?${params.toString()}`);
+      const data     = await response.json();
+      return res.status(200).json(data);
+    }
+
+    // ── CHI HỘI: gửi file báo cáo ────────────────────────────────────
+    if (body.file && body.filename) {
+      const response = await fetch(WEBAPP_URL, {
+        method:  "POST",
+        headers: { "Content-Type": "application/json" },
+        body:    JSON.stringify({ file: body.file, filename: body.filename }),
+      });
+      const data = await response.json();
+      return res.status(200).json(data);
+    }
+
+    return res.status(400).json({ success: false, error: "Yêu cầu không hợp lệ" });
 
   } catch (err) {
-    return res.status(500).json({
-      error: "Lỗi kết nối tới Google Script: " + err.message
-    });
+    return res.status(500).json({ success: false, error: err.message });
   }
 }
