@@ -1,47 +1,46 @@
-// api/proxy.js
-// Vercel Serverless Function: đóng vai trò trung gian giữa trình duyệt
-// và Google Apps Script Web App. Link Apps Script thật KHÔNG nằm trong
-// mã nguồn, mà được đọc từ biến môi trường GOOGLE_SHEET_API_URL,
-// do đó không ai xem "View Page Source" mà lấy được link Google Sheet.
+// api/proxy.js – Vercel Serverless Function
+// Che giấu WEBAPP_URL khỏi client, xử lý cả gửi báo cáo lẫn admin getStats
+
+const WEBAPP_URL = process.env.WEBAPP_URL;
 
 export default async function handler(req, res) {
-  // Chỉ chấp nhận POST, giống như app đang dùng
+  // Chỉ nhận POST
   if (req.method !== "POST") {
-    res.status(405).json({ success: false, message: "Method not allowed" });
-    return;
+    return res.status(405).json({ success: false, error: "Method not allowed" });
   }
 
-  const API_URL = process.env.GOOGLE_SHEET_API_URL;
-
-  if (!API_URL) {
-    res.status(500).json({
-      success: false,
-      message:
-        "Server chưa cấu hình GOOGLE_SHEET_API_URL. Vào Vercel > Settings > Environment Variables để thêm.",
-    });
-    return;
+  if (!WEBAPP_URL) {
+    return res.status(500).json({ success: false, error: "WEBAPP_URL chưa được cấu hình trên server" });
   }
+
+  const body = req.body;
 
   try {
-    const upstream = await fetch(API_URL, {
-      method: "POST",
-      headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify(req.body || {}),
-    });
+    // ── ADMIN: lấy thống kê ──────────────────────────────────────────
+    if (body.action === "getStats" || body.action === "getMonths" || body.action === "ping") {
+      const params = new URLSearchParams({ action: body.action });
+      if (body.thang) params.set("thang", body.thang);
+      if (body.nam)   params.set("nam",   body.nam);
 
-    const text = await upstream.text();
-
-    // Apps Script luôn trả JSON, cố gắng parse; nếu lỗi thì trả nguyên văn để dễ debug
-    try {
-      const data = JSON.parse(text);
-      res.status(200).json(data);
-    } catch {
-      res.status(200).send(text);
+      const response = await fetch(`${WEBAPP_URL}?${params.toString()}`);
+      const data     = await response.json();
+      return res.status(200).json(data);
     }
+
+    // ── CHI HỘI: gửi file báo cáo ────────────────────────────────────
+    if (body.file && body.filename) {
+      const response = await fetch(WEBAPP_URL, {
+        method:  "POST",
+        headers: { "Content-Type": "application/json" },
+        body:    JSON.stringify({ file: body.file, filename: body.filename }),
+      });
+      const data = await response.json();
+      return res.status(200).json(data);
+    }
+
+    return res.status(400).json({ success: false, error: "Yêu cầu không hợp lệ" });
+
   } catch (err) {
-    res.status(500).json({
-      success: false,
-      message: "Lỗi kết nối tới Google Apps Script: " + err.message,
-    });
+    return res.status(500).json({ success: false, error: err.message });
   }
 }
